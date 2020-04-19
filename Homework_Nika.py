@@ -16,7 +16,7 @@ filtered_text = [word for word in output_new if not word in stop_words]
 
 
 word_fd = nltk.FreqDist(filtered_text)
-# print(word_fd.most_common(20))
+print(word_fd.most_common(20))
 
 bigrams = list(nltk.bigrams(filtered_text))
 fdist = nltk.FreqDist(bigrams)
