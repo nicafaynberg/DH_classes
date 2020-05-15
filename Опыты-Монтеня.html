@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Ника Файнберг" />
+
+
+<title>Опыты Монтеня</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Опыты Монтеня</h1>
+<h4 class="author">Ника Файнберг</h4>
+<h4 class="date">15.05.20</h4>
+
+
+
+<p>Корпусом стала книга Монтеня “Опыты”, разделенная на главы как на отдельные документы, необходимые для процесса TM. Эта книга была выбрана для эксперимента, поскольку я не читала ее и хотела таким образом узнать, какие в ней ключевые темы (такой подход соответствует идеям distant-reading). Проблема была с объемом книги - почему-то документ txt с ее текстом заявил мне, что он слишком большой, поэтому исследование проводилось на частично обрезанной книге.</p>
+<p>Количество топиков было выбрано без специальных оснований, просто по ощущению, что хотелось бы узнать мало топиков, но более четких.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> TfidfVectorizer, CountVectorizer</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="im">from</span> sklearn.decomposition <span class="im">import</span> NMF, LatentDirichletAllocation</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="im">from</span> gensim.corpora <span class="im">import</span> Dictionary</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="im">import</span> os</a>
+<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="im">from</span> pymystem3 <span class="im">import</span> Mystem</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="im">from</span> stop_words <span class="im">import</span> get_stop_words</a>
+<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="im">import</span> string</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8"><span class="im">import</span> re</a>
+<a class="sourceLine" id="cb1-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb1-10" data-line-number="10">m <span class="op">=</span> Mystem()</a>
+<a class="sourceLine" id="cb1-11" data-line-number="11"></a>
+<a class="sourceLine" id="cb1-12" data-line-number="12">stop_words_list <span class="op">=</span> get_stop_words(<span class="st">'ru'</span>)</a>
+<a class="sourceLine" id="cb1-13" data-line-number="13"><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'иль'</span>, <span class="st">'свой'</span>, <span class="st">'изза'</span>, <span class="st">'сюда'</span>, <span class="st">'что-либо'</span>, <span class="st">'сквозь'</span>, <span class="st">'иной'</span>, <span class="st">'де'</span>, <span class="st">'г-н'</span>, <span class="st">'как-то'</span>, <span class="st">'итак'</span>, <span class="st">'какой-то'</span>]:</a>
+<a class="sourceLine" id="cb1-14" data-line-number="14">    stop_words_list.append(w)</a>
+<a class="sourceLine" id="cb1-15" data-line-number="15"><span class="cf">for</span> w <span class="kw">in</span> [<span class="st">'ах'</span>, <span class="st">'свой'</span>, <span class="st">'меж'</span>, <span class="st">'коль'</span>, <span class="st">'сей'</span>, <span class="st">'ль'</span>, <span class="st">'толь'</span>, <span class="st">'ка'</span>, <span class="st">'либо'</span>, <span class="st">'ибо'</span>, <span class="st">'всякий'</span>, <span class="st">'самый'</span>, <span class="st">'говорить'</span>, <span class="st">'et'</span>, <span class="st">'дело'</span>, <span class="st">'писать'</span>]:</a>
+<a class="sourceLine" id="cb1-16" data-line-number="16">    stop_words_list.append(w)</a>
+<a class="sourceLine" id="cb1-17" data-line-number="17"></a>
+<a class="sourceLine" id="cb1-18" data-line-number="18">f <span class="op">=</span> <span class="bu">open</span>(<span class="st">'monten'</span>, <span class="st">'r'</span>)</a>
+<a class="sourceLine" id="cb1-19" data-line-number="19">erasm <span class="op">=</span> f.read()</a>
+<a class="sourceLine" id="cb1-20" data-line-number="20"></a>
+<a class="sourceLine" id="cb1-21" data-line-number="21">erasm2 <span class="op">=</span> re.sub(<span class="vs">r'\n'</span>,<span class="st">''</span>, erasm)</a>
+<a class="sourceLine" id="cb1-22" data-line-number="22">erasm3 <span class="op">=</span> re.sub(<span class="vs">r'\d\W'</span>,<span class="st">''</span>, erasm2)</a>
+<a class="sourceLine" id="cb1-23" data-line-number="23">lemmatized <span class="op">=</span> m.lemmatize(erasm3)</a>
+<a class="sourceLine" id="cb1-24" data-line-number="24">my_list <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb1-25" data-line-number="25"><span class="cf">for</span> word <span class="kw">in</span> lemmatized:</a>
+<a class="sourceLine" id="cb1-26" data-line-number="26">    <span class="cf">if</span> word <span class="kw">not</span> <span class="kw">in</span> stop_words_list:</a>
+<a class="sourceLine" id="cb1-27" data-line-number="27">        my_list <span class="op">+=</span> word</a>
+<a class="sourceLine" id="cb1-28" data-line-number="28">    <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-29" data-line-number="29">        <span class="cf">continue</span></a>
+<a class="sourceLine" id="cb1-30" data-line-number="30"><span class="co"># print(my_list)</span></a>
+<a class="sourceLine" id="cb1-31" data-line-number="31"></a>
+<a class="sourceLine" id="cb1-32" data-line-number="32">stroka <span class="op">=</span> <span class="st">''</span>.join(my_list)</a>
+<a class="sourceLine" id="cb1-33" data-line-number="33">final <span class="op">=</span> []</a>
+<a class="sourceLine" id="cb1-34" data-line-number="34"><span class="cf">for</span> bit <span class="kw">in</span> stroka:</a>
+<a class="sourceLine" id="cb1-35" data-line-number="35">    <span class="cf">if</span> bit <span class="kw">not</span> <span class="kw">in</span> string.punctuation:</a>
+<a class="sourceLine" id="cb1-36" data-line-number="36">        final.append(bit)</a>
+<a class="sourceLine" id="cb1-37" data-line-number="37">    <span class="cf">else</span>:</a>
+<a class="sourceLine" id="cb1-38" data-line-number="38">        <span class="cf">continue</span></a>
+<a class="sourceLine" id="cb1-39" data-line-number="39"></a>
+<a class="sourceLine" id="cb1-40" data-line-number="40">stroka2 <span class="op">=</span> <span class="st">''</span>.join(final)</a>
+<a class="sourceLine" id="cb1-41" data-line-number="41">pieces <span class="op">=</span> re.split(<span class="st">'глава'</span>, stroka2)</a>
+<a class="sourceLine" id="cb1-42" data-line-number="42"></a>
+<a class="sourceLine" id="cb1-43" data-line-number="43">tfidf_vectorizer <span class="op">=</span> TfidfVectorizer(max_df<span class="op">=</span><span class="fl">0.95</span>, min_df<span class="op">=</span><span class="dv">2</span>, stop_words<span class="op">=</span>stop_words_list)</a>
+<a class="sourceLine" id="cb1-44" data-line-number="44">tfidf <span class="op">=</span> tfidf_vectorizer.fit_transform(pieces)</a>
+<a class="sourceLine" id="cb1-45" data-line-number="45">tfidf_feature_names <span class="op">=</span> tfidf_vectorizer.get_feature_names()</a>
+<a class="sourceLine" id="cb1-46" data-line-number="46">random_seed <span class="op">=</span> <span class="dv">42</span></a>
+<a class="sourceLine" id="cb1-47" data-line-number="47">no_topics <span class="op">=</span> <span class="dv">5</span></a>
+<a class="sourceLine" id="cb1-48" data-line-number="48">no_top_words <span class="op">=</span> <span class="dv">10</span></a>
+<a class="sourceLine" id="cb1-49" data-line-number="49">nmf <span class="op">=</span> NMF(n_components<span class="op">=</span>no_topics, random_state<span class="op">=</span>random_seed, alpha<span class="op">=</span>.<span class="dv">1</span>, l1_ratio<span class="op">=</span>.<span class="dv">5</span>, init<span class="op">=</span><span class="st">'nndsvd'</span>).fit(tfidf)</a>
+<a class="sourceLine" id="cb1-50" data-line-number="50"><span class="kw">def</span> display_topics(model, feature_names, no_top_words):</a>
+<a class="sourceLine" id="cb1-51" data-line-number="51">    <span class="cf">for</span> topic_idx, topic <span class="kw">in</span> <span class="bu">enumerate</span>(model.components_):</a>
+<a class="sourceLine" id="cb1-52" data-line-number="52">        <span class="bu">print</span>(<span class="st">&quot;Тема </span><span class="sc">{}</span><span class="st">:&quot;</span>.<span class="bu">format</span>(topic_idx<span class="op">+</span><span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb1-53" data-line-number="53">        topic_words <span class="op">=</span> <span class="st">&quot;, &quot;</span>.join([feature_names[i] <span class="cf">for</span> i <span class="kw">in</span> topic.argsort()[:<span class="op">-</span>no_top_words <span class="op">-</span> <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>]])</a>
+<a class="sourceLine" id="cb1-54" data-line-number="54">        <span class="bu">print</span>(topic_words)</a>
+<a class="sourceLine" id="cb1-55" data-line-number="55">    <span class="bu">print</span>()</a>
+<a class="sourceLine" id="cb1-56" data-line-number="56">display_topics(nmf, tfidf_feature_names, no_top_words)</a></code></pre></div>
+<p>Тема 1: латы, смерть, душа, знать, видеть, вещь, ребенок, сила, друг, слово</p>
+<p>Тема 2: битва, беотиец, ударять, гиз, филопемен, преследование, нападать, отступать, неприятель, солдат</p>
+<p>Тема 3: письмо, царь, амио, послание, плутарх, слог, красноречие, сенат, учтивость, написать</p>
+<p>Тема 4: муж, жена, сенека, петь, паулина, любовь, смерть, захотеть, цецин, dolet</p>
+<p>Тема 5: цезарь, солдат, армия, катон, победа, осада, война, переправляться, воин, враг</p>
+<p>Результаты обрадовали меня. Хотя изначально я не знала, хороши они или нет, поиск в интернете слов из выдачи показал мне, что топик-моделлинг сработал. Начнем с однозначной интерпретации: тема 4 - это тема брака (“муж”, “жена”) Сенеки и Помпеи Паулины, они вместе совершили самоубийство, думаю, поэтому в теме есть и слово “смерть”. Интересно, что слово “смерть” попало и в тему 1 (что подтверждает, что алгоритм не просто произвел экстракцию ключевых слов). Темы 2 и 5 обе связаны с какими-то военными действиями, но, по всей видимости, речь в них идет о разных войнах. В теме 2 подразумевается греческая война (“беотиец”, “Филопемен”), а в теме 5 - римская (“Цезарь”, “Катон”). Тема 3, видимо, посвящена какм-то дипломатическим делам (“письмо”, “послание”, “красноречие”, “сенат”, “учтивость”, “написать”).</p>
+<p>Дважды в темах возникают современники Монтеня: “амио” и “dolet” - это, по всей видимости, Жак Амио и Этьен Доле. Амио появляется в одной теме с Плутархом, кажется, не случайно: Монтень пишет об Амио как о переводчике Плутарха, как указано в нашем справочнике - Википедии.</p>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

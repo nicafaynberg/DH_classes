@@ -1,0 +1,91 @@
+---
+title: "Опыты Монтеня"
+author: Ника Файнберг
+date: 15.05.20
+output: rmarkdown::html_vignette
+---
+Корпусом стала книга Монтеня "Опыты", разделенная на главы как на отдельные документы, необходимые для процесса TM. Эта книга была выбрана для эксперимента, поскольку я не читала ее и хотела таким образом узнать, какие в ней ключевые темы (такой подход соответствует идеям distant-reading). Проблема была с объемом книги - почему-то документ txt с ее текстом заявил мне, что он слишком большой, поэтому исследование проводилось на частично обрезанной книге.
+
+Количество топиков было выбрано без специальных оснований, просто по ощущению, что хотелось бы узнать мало топиков, но более четких.
+
+```{Python}
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from sklearn.decomposition import NMF, LatentDirichletAllocation
+from gensim.corpora import Dictionary
+import os
+from pymystem3 import Mystem
+from stop_words import get_stop_words
+import string
+import re
+
+m = Mystem()
+
+stop_words_list = get_stop_words('ru')
+for w in ['иль', 'свой', 'изза', 'сюда', 'что-либо', 'сквозь', 'иной', 'де', 'г-н', 'как-то', 'итак', 'какой-то']:
+    stop_words_list.append(w)
+for w in ['ах', 'свой', 'меж', 'коль', 'сей', 'ль', 'толь', 'ка', 'либо', 'ибо', 'всякий', 'самый', 'говорить', 'et', 'дело', 'писать']:
+    stop_words_list.append(w)
+
+f = open('monten', 'r')
+erasm = f.read()
+
+erasm2 = re.sub(r'\n','', erasm)
+erasm3 = re.sub(r'\d\W','', erasm2)
+lemmatized = m.lemmatize(erasm3)
+my_list = []
+for word in lemmatized:
+    if word not in stop_words_list:
+        my_list += word
+    else:
+        continue
+# print(my_list)
+
+stroka = ''.join(my_list)
+final = []
+for bit in stroka:
+    if bit not in string.punctuation:
+        final.append(bit)
+    else:
+        continue
+
+stroka2 = ''.join(final)
+pieces = re.split('глава', stroka2)
+
+tfidf_vectorizer = TfidfVectorizer(max_df=0.95, min_df=2, stop_words=stop_words_list)
+tfidf = tfidf_vectorizer.fit_transform(pieces)
+tfidf_feature_names = tfidf_vectorizer.get_feature_names()
+random_seed = 42
+no_topics = 5
+no_top_words = 10
+nmf = NMF(n_components=no_topics, random_state=random_seed, alpha=.1, l1_ratio=.5, init='nndsvd').fit(tfidf)
+def display_topics(model, feature_names, no_top_words):
+    for topic_idx, topic in enumerate(model.components_):
+        print("Тема {}:".format(topic_idx+1))
+        topic_words = ", ".join([feature_names[i] for i in topic.argsort()[:-no_top_words - 1:-1]])
+        print(topic_words)
+    print()
+display_topics(nmf, tfidf_feature_names, no_top_words)
+```
+Тема 1:
+латы, смерть, душа, знать, видеть, вещь, ребенок, сила, друг, слово
+
+Тема 2:
+битва, беотиец, ударять, гиз, филопемен, преследование, нападать, отступать, неприятель, солдат
+
+Тема 3:
+письмо, царь, амио, послание, плутарх, слог, красноречие, сенат, учтивость, написать
+
+Тема 4:
+муж, жена, сенека, петь, паулина, любовь, смерть, захотеть, цецин, dolet
+
+Тема 5:
+цезарь, солдат, армия, катон, победа, осада, война, переправляться, воин, враг
+
+Результаты обрадовали меня. Хотя изначально я не знала, хороши они или нет, поиск в интернете
+слов из выдачи показал мне, что топик-моделлинг сработал.
+Начнем с однозначной интерпретации: тема 4 - это тема брака ("муж", "жена") Сенеки и Помпеи Паулины, они вместе совершили самоубийство, думаю, поэтому в теме есть и слово "смерть".
+Интересно, что слово "смерть" попало и в тему 1 (что подтверждает, что алгоритм не просто произвел экстракцию ключевых слов).
+Темы 2 и 5 обе связаны с какими-то военными действиями, но, по всей видимости, речь в них идет о разных войнах. В теме 2 подразумевается греческая война ("беотиец", "Филопемен"), а в теме 5 - римская ("Цезарь", "Катон").
+Тема 3, видимо, посвящена какм-то дипломатическим делам ("письмо", "послание", "красноречие", "сенат", "учтивость", "написать").
+
+Дважды в темах возникают современники Монтеня: "амио" и "dolet" - это, по всей видимости, Жак Амио и Этьен Доле. Амио появляется в одной теме с Плутархом, кажется, не случайно: Монтень пишет об Амио как о переводчике Плутарха, как указано в нашем справочнике - Википедии.
